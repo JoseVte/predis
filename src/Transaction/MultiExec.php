@@ -66,7 +66,8 @@ class MultiExec implements ClientContextInterface
      */
     private function assertClient(ClientInterface $client)
     {
-        if ($client->getConnection() instanceof AggregateConnectionInterface) {
+        $enableLaravelQueues = getenv('LARAVEL_ENABLE_QUEUE_SENTINEL') ?: false;
+        if (!$enableLaravelQueues && $client->getConnection() instanceof AggregateConnectionInterface) {
             throw new NotSupportedException(
                 'Cannot initialize a MULTI/EXEC transaction over aggregate connections.'
             );
